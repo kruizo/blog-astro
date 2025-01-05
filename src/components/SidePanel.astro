@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+
+const allBlogs = await getCollection('blog');
+
+// Group blogs by year and month
+const archives = allBlogs.reduce((acc, blog) => {
+  const date = new Date(blog.data.pubDate);
+  const year = date.getFullYear();
+  const month = date.toLocaleString('default', { month: 'long' });
+  const key = `${month} ${year}`;
+
+  if (!acc[key]) {
+    acc[key] = [];
+  }
+  acc[key].push(blog);
+
+  return acc;
+}, {});
+---
+
+<section class="flex-grow">
+  <div class="py-10 w-full">
+    <!-- Other content -->
+  </div>
+  <div class="p-4 w-full text-[color:var(--accent)] bg-[color:var(--accent-dark)]">
+    <h2 class="text-lg font-semibold mb-4">ARCHIVE</h2>
+    <ul>
+      {Object.keys(archives).map(key => (
+        <li>
+          <a href={`#`} class="text-[color:var(--accent)]">
+            {key} ({archives[key].length})
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
