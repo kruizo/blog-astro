@@ -29,6 +29,13 @@ export default {
         day: "numeric",
       });
 
+    const startCarousel = () => {
+      setInterval(() => {
+        const nextIndex = (state.currentIndex + 1) % featuredBlogs.length;
+        goToSlide(nextIndex);
+      }, 3000);
+    };
+
     const handleMouseDown = (e) => {
       state.isDown = true;
       state.startX = e.pageX - carousel.value.offsetLeft;
@@ -87,7 +94,9 @@ export default {
 
     onMounted(() => {
       const observer = observeCarouselItems();
+      startCarousel();
       onUnmounted(() => observer.disconnect());
+      onUnmounted(() => stopCarousel());
     });
 
     const goToSlide = (index) => {
@@ -131,6 +140,8 @@ export default {
         @touchstart="handleMouseDown"
         @touchmove="handleMouseMove"
         @touchend="handleMouseUp"
+        @mouseleave="handleMouseUp"
+        @touchcancel="handleMouseUp"
       >
         <div
           v-for="(blog, index) in featuredBlogs"
