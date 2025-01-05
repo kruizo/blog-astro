@@ -3,7 +3,16 @@
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"],
   "compilerOptions": {
-    "strictNullChecks": true,
-    "types": ["@types/vue"]
+    // "strictNullChecks": true,
+    "baseUrl": ".",
+    "strict": false,
+    "types": ["@types/vue"],
+    "paths": {
+      "@/components/*": ["src/components/*"],
+      "@/layouts/*": ["src/layouts/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/styles/*": ["src/styles/*"],
+      "@/content/*": ["src/content/*"]
+    }
   }
 }
