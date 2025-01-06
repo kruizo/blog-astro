@@ -1,6 +1,6 @@
 # blog-astro-vue </>
 
-![blog](public/image.png)
+![blog](./public/image.png)
 
 Welcome to the Blog Astro Project! This project is built using [Astro](https://astro.build/), a modern static site generator, and integrates with Vue.js for dynamic components. The project is styled using Tailwind CSS and includes a variety of features to create a dynamic and engaging blog.
 
