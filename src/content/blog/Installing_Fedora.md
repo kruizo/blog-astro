@@ -1,6 +1,6 @@
 ---
 title: "Why and How to Install Fedora Linux"
-description: "A beginner's guide to installing Fedora and exploring its benefits"
+description: "Fedora Linux is a cutting-edge, community-driven distribution that serves as the foundation for Red Hat Enterprise Linux (RHEL). Here are soreasons why you might choose Fedora:Fedora Linux is a cutting-edge, community-driven distribution that serves as the foundation for Red Hat Enter"
 pubDate: "Jan 4 2025"
 heroImage: "https://cdn-images.postach.io/a364382a-e52d-4c45-9f69-c1cdaa7b5946/7015f120-0f6a-44c4-acf3-928d3ae148d7/877bbebc-5e8a-427e-b7a1-c625a4bf6cce.jpg"
 featured: true
