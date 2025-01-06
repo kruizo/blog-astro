@@ -32,6 +32,26 @@ export default {
 
     let scrollTimeout = null;
 
+    const carouselInterval = ref(null);
+    const startCarousel = () => {
+      stopCarousel(); // Clear any previous interval before starting a new one
+      carouselInterval.value = setInterval(() => {
+        if (state.isDown) {
+          console.log("Carousel paused (isDown=true)");
+          return; // Skip sliding while the user is interacting
+        }
+        console.log("Sliding to next...");
+        const nextIndex = (state.currentIndex + 1) % featuredBlogs.length;
+        goToSlide(nextIndex);
+      }, 3000);
+    };
+    const stopCarousel = () => {
+      if (carouselInterval.value) {
+        clearInterval(carouselInterval.value);
+        carouselInterval.value = null;
+      }
+    };
+
     const handleScroll = () => {
       state.isScrolling = true;
       clearTimeout(scrollTimeout);
@@ -80,6 +100,7 @@ export default {
 
     const handleMouseDown = (e) => {
       state.isDown = true;
+      stopCarousel();
       state.startX = e.pageX - carousel.value.offsetLeft;
       state.scrollLeft = carousel.value.scrollLeft;
     };
@@ -95,6 +116,7 @@ export default {
     const handleMouseUp = () => {
       state.isDown = false;
       snapToClosest();
+      startCarousel();
     };
 
     const observeCarouselItems = () => {
@@ -127,10 +149,12 @@ export default {
 
     onMounted(() => {
       const observer = observeCarouselItems();
+      const carousel = startCarousel();
       carousel.value.addEventListener("scroll", handleScroll);
 
       onUnmounted(() => {
         observer.disconnect();
+        stopCarousel();
         carousel.value.removeEventListener("scroll", handleScroll);
         clearTimeout(scrollTimeout);
       });
