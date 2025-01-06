@@ -20,7 +20,9 @@
           {{ blog.data.description }}
         </p>
       </div>
-      <p class="font-medium text-sm text-primary text-gray-500">
+      <p
+        class="font-medium text-sm text-primary text-gray-500 min-w-24 text-right"
+      >
         {{ formatDate(blog.data.pubDate) }}
       </p>
     </div>
