@@ -16,7 +16,7 @@ export default {
       startX: 0,
       scrollLeft: 0,
       currentIndex: 0,
-      clicked: false,
+      isScrolling: false,
     });
 
     const featuredBlogs = props.blogs
@@ -30,52 +30,21 @@ export default {
         day: "numeric",
       });
 
-    const carouselInterval = ref(null);
-    const startCarousel = () => {
-      stopCarousel(); // Clear any previous interval before starting a new one
-      carouselInterval.value = setInterval(() => {
-        if (state.isDown) {
-          console.log("Carousel paused (isDown=true)");
-          return; // Skip sliding while the user is interacting
-        }
-        console.log("Sliding to next...");
-        const nextIndex = (state.currentIndex + 1) % featuredBlogs.length;
-        goToSlide(nextIndex);
-      }, 3000);
+    let scrollTimeout = null;
+
+    const handleScroll = () => {
+      state.isScrolling = true;
+      clearTimeout(scrollTimeout);
+
+      scrollTimeout = setTimeout(() => {
+        state.isScrolling = false;
+        snapToClosest();
+      }, 100); // Adjust debounce time as needed
     };
 
-    const stopCarousel = () => {
-      if (carouselInterval.value) {
-        clearInterval(carouselInterval.value);
-        carouselInterval.value = null;
-      }
-    };
-    const handleMouseDown = (e) => {
-      state.isDown = true;
-      console.log(state.isDown);
-      stopCarousel();
-      state.startX = e.pageX - carousel.value.offsetLeft;
-      state.scrollLeft = carousel.value.scrollLeft;
-    };
-
-    const handleMouseMove = (e) => {
-      if (!state.isDown) return;
-      e.preventDefault();
-
-      const x = e.pageX - carousel.value.offsetLeft;
-      const walk = x - state.startX;
-      carousel.value.scrollLeft = state.scrollLeft - walk;
-    };
-
-    const handleMouseUp = () => {
-      if (!state.isDown) return;
-
-      state.isDown = false;
-
-      // Snap to the nearest item
+    const snapToClosest = () => {
       const items = carousel.value.querySelectorAll(".carousel-item");
       const scrollLeft = carousel.value.scrollLeft;
-      const carouselWidth = carousel.value.offsetWidth;
 
       let closestIndex = state.currentIndex;
       let minDistance = Infinity;
@@ -89,21 +58,56 @@ export default {
           minDistance = distance;
         }
       });
+
       goToSlide(closestIndex);
-      startCarousel();
+    };
+
+    const goToSlide = (index) => {
+      const carouselElement = carousel.value;
+      const targetElement = carouselElement.querySelector(
+        `#carousel-item-${index}`
+      );
+
+      if (targetElement) {
+        carouselElement.scrollTo({
+          left: targetElement.offsetLeft,
+          behavior: "smooth",
+        });
+
+        state.currentIndex = index;
+      }
+    };
+
+    const handleMouseDown = (e) => {
+      state.isDown = true;
+      state.startX = e.pageX - carousel.value.offsetLeft;
+      state.scrollLeft = carousel.value.scrollLeft;
+    };
+
+    const handleMouseMove = (e) => {
+      if (!state.isDown) return;
+      e.preventDefault();
+      const x = e.pageX - carousel.value.offsetLeft;
+      const walk = x - state.startX;
+      carousel.value.scrollLeft = state.scrollLeft - walk;
+    };
+
+    const handleMouseUp = () => {
+      state.isDown = false;
+      snapToClosest();
     };
 
     const observeCarouselItems = () => {
       const observerOptions = {
         root: carousel.value,
-        threshold: 0.5, // At least 50% of the item must be visible
+        threshold: 0.5,
       };
 
       const observerCallback = (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.dataset.index, 10);
-            state.currentIndex = index; // Update the current index based on the visible item
+            state.currentIndex = index;
           }
         });
       };
@@ -113,7 +117,6 @@ export default {
         observerOptions
       );
 
-      // Observe each carousel item
       const items = carousel.value.querySelectorAll(".carousel-item");
       items.forEach((item) => {
         observer.observe(item);
@@ -124,30 +127,14 @@ export default {
 
     onMounted(() => {
       const observer = observeCarouselItems();
-      startCarousel();
-      onUnmounted(() => observer.disconnect());
+      carousel.value.addEventListener("scroll", handleScroll);
+
+      onUnmounted(() => {
+        observer.disconnect();
+        carousel.value.removeEventListener("scroll", handleScroll);
+        clearTimeout(scrollTimeout);
+      });
     });
-
-    const goToSlide = (index) => {
-      const carouselElement = carousel.value;
-      const targetElement = carouselElement.querySelector(
-        `#carousel-item-${index}`
-      );
-
-      if (targetElement) {
-        // Calculate the left offset of the target element
-        const targetOffsetLeft = targetElement.offsetLeft;
-
-        // Smoothly scroll to the target element
-        carouselElement.scrollTo({
-          left: targetOffsetLeft,
-          behavior: "smooth",
-        });
-
-        // Update the current index
-        state.currentIndex = index;
-      }
-    };
 
     return {
       featuredBlogs,
