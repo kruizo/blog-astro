@@ -9,5 +9,5 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   site: "https://example.com",
-  integrations: [mdx(), sitemap(), vue(), tailwind({ applyBaseStyles: false })],
+  integrations: [vue(), mdx(), sitemap(), tailwind({ applyBaseStyles: false })],
 });
