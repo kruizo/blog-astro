@@ -1,15 +1,25 @@
 .glow-overlay {
-  --glow-size: 25rem;
+  --glow-size: 20rem;
   position: absolute;
   inset: 0;
   pointer-events: none;
   user-select: none;
   opacity: var(--glow-opacity, 0);
+
+  -webkit-mask: radial-gradient(
+    var(--glow-size) var(--glow-size) at var(--glow-x) var(--glow-y),
+    var(--glow-color) 1%,
+    transparent 50%
+  );
   mask: radial-gradient(
     var(--glow-size) var(--glow-size) at var(--glow-x) var(--glow-y),
     var(--glow-color) 1%,
     transparent 50%
   );
-  transition: 400ms mask ease;
-  will-change: mask;
+  transition: 400ms mask ease, 400ms -webkit-mask ease, 400ms opacity ease;
+  z-index: 1;
+}
+
+.glow-capture {
+  position: relative;
 }
