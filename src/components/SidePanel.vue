@@ -1,5 +1,5 @@
 <template #side-panel>
-  <section class="w-1/5">
+  <section class="w-1/5 hidden sm:block">
     <div
       class="p-4 w-full text-[color:var(--accent)] bg-[color:var(--accent-dark)]"
     >
