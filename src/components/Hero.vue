@@ -53,7 +53,7 @@ export default {
     const handleMouseDown = (e) => {
       state.isDown = true;
       console.log(state.isDown);
-      stopCarousel(); // Stop auto-slide during interaction
+      stopCarousel();
       state.startX = e.pageX - carousel.value.offsetLeft;
       state.scrollLeft = carousel.value.scrollLeft;
     };
@@ -89,8 +89,8 @@ export default {
           minDistance = distance;
         }
       });
-      goToSlide(closestIndex); // Snap to the nearest slide
-      startCarousel(); // Resume auto-slide
+      goToSlide(closestIndex);
+      startCarousel();
     };
 
     const observeCarouselItems = () => {
@@ -129,10 +129,22 @@ export default {
     });
 
     const goToSlide = (index) => {
-      const targetId = `carousel-item-${index}`;
-      const targetElement = document.getElementById(targetId);
+      const carouselElement = carousel.value;
+      const targetElement = carouselElement.querySelector(
+        `#carousel-item-${index}`
+      );
+
       if (targetElement) {
-        targetElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        // Calculate the left offset of the target element
+        const targetOffsetLeft = targetElement.offsetLeft;
+
+        // Smoothly scroll to the target element
+        carouselElement.scrollTo({
+          left: targetOffsetLeft,
+          behavior: "smooth",
+        });
+
+        // Update the current index
         state.currentIndex = index;
       }
     };
