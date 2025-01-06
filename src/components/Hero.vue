@@ -16,6 +16,7 @@ export default {
       startX: 0,
       scrollLeft: 0,
       currentIndex: 0,
+      clicked: false,
     });
 
     const featuredBlogs = props.blogs
@@ -29,15 +30,30 @@ export default {
         day: "numeric",
       });
 
+    const carouselInterval = ref(null);
     const startCarousel = () => {
-      setInterval(() => {
+      stopCarousel(); // Clear any previous interval before starting a new one
+      carouselInterval.value = setInterval(() => {
+        if (state.isDown) {
+          console.log("Carousel paused (isDown=true)");
+          return; // Skip sliding while the user is interacting
+        }
+        console.log("Sliding to next...");
         const nextIndex = (state.currentIndex + 1) % featuredBlogs.length;
         goToSlide(nextIndex);
       }, 3000);
     };
 
+    const stopCarousel = () => {
+      if (carouselInterval.value) {
+        clearInterval(carouselInterval.value);
+        carouselInterval.value = null;
+      }
+    };
     const handleMouseDown = (e) => {
       state.isDown = true;
+      console.log(state.isDown);
+      stopCarousel(); // Stop auto-slide during interaction
       state.startX = e.pageX - carousel.value.offsetLeft;
       state.scrollLeft = carousel.value.scrollLeft;
     };
@@ -45,22 +61,36 @@ export default {
     const handleMouseMove = (e) => {
       if (!state.isDown) return;
       e.preventDefault();
+
       const x = e.pageX - carousel.value.offsetLeft;
-      const walk = (x - state.startX) * 1;
+      const walk = x - state.startX;
       carousel.value.scrollLeft = state.scrollLeft - walk;
     };
 
     const handleMouseUp = () => {
-      state.isDown = false;
-      snapToCurrentItem();
-    };
+      if (!state.isDown) return;
 
-    const snapToCurrentItem = () => {
-      const currentId = `carousel-item-${state.currentIndex}`;
-      const currentItem = document.getElementById(currentId);
-      if (currentItem) {
-        currentItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
+      state.isDown = false;
+
+      // Snap to the nearest item
+      const items = carousel.value.querySelectorAll(".carousel-item");
+      const scrollLeft = carousel.value.scrollLeft;
+      const carouselWidth = carousel.value.offsetWidth;
+
+      let closestIndex = state.currentIndex;
+      let minDistance = Infinity;
+
+      items.forEach((item, index) => {
+        const itemLeft = item.offsetLeft;
+        const distance = Math.abs(itemLeft - scrollLeft);
+
+        if (distance < minDistance) {
+          closestIndex = index;
+          minDistance = distance;
+        }
+      });
+      goToSlide(closestIndex); // Snap to the nearest slide
+      startCarousel(); // Resume auto-slide
     };
 
     const observeCarouselItems = () => {
@@ -96,7 +126,6 @@ export default {
       const observer = observeCarouselItems();
       startCarousel();
       onUnmounted(() => observer.disconnect());
-      onUnmounted(() => stopCarousel());
     });
 
     const goToSlide = (index) => {
@@ -123,43 +152,35 @@ export default {
 </script>
 
 <template>
-  <div class="py-10 w-full">
-    <div class="max-w-6xl px-4 text-start">
-      <h2 class="text-gray-500 uppercase tracking-widest text-sm mb-8 max-h-5">
+  <section class="py-5 w-full relative mb-10">
+    <div class="px-2 text-start">
+      <p class="text-blue-400 uppercase tracking-widest text-sm mb-8 max-h-5">
         Featured
-      </h2>
+      </p>
     </div>
-    <div class="relative max-w-5xl mx-auto">
+    <div
+      class="carousel h-[25rem] snap-x snap-mandatory max-h[25rem] overflow-x-auto flex"
+      ref="carousel"
+      @mousedown="handleMouseDown"
+      @mouseup="handleMouseUp"
+      @mousemove="handleMouseMove"
+      @touchstart="handleMouseDown"
+      @touchmove="handleMouseMove"
+      @touchend="handleMouseUp"
+      @mouseleave="handleMouseUp"
+      @touchcancel="handleMouseUp"
+    >
       <!-- Carousel -->
       <div
-        ref="carousel"
-        class="carousel flex overflow-x-auto gap-4"
-        @mousedown="handleMouseDown"
-        @mouseup="handleMouseUp"
-        @mousemove="handleMouseMove"
-        @touchstart="handleMouseDown"
-        @touchmove="handleMouseMove"
-        @touchend="handleMouseUp"
-        @mouseleave="handleMouseUp"
-        @touchcancel="handleMouseUp"
+        v-for="(blog, index) in featuredBlogs"
+        :key="index"
+        :data-index="index"
+        :id="'carousel-item-' + index"
+        class="carousel-item min-w-full flex-grow shadow-md rounded-md flex"
       >
-        <div
-          v-for="(blog, index) in featuredBlogs"
-          :key="index"
-          :data-index="index"
-          :id="'carousel-item-' + index"
-          class="carousel-item min-w-full snap-start shadow-md rounded-md overflow-hidden flex flex-col md:flex-row-reverse"
-        >
-          <!-- Image -->
-          <img
-            :src="blog.data.heroImage"
-            :alt="blog.data.title"
-            class="w-full md:w-1/2 object-cover"
-            draggable="false"
-          />
-          <!-- Blog Info -->
-          <div class="p-6 w-full md:w-1/2 flex flex-col">
-            <h3 class="text-6xl font-semibold text-primary mb-2 text-content">
+        <div class="m-2 w-1/2">
+          <div class="h-3/4">
+            <h3 class="text-[6vh] font-semibold text-primary mb-2 text-content">
               {{ blog.data.title }}
             </h3>
             <p class="text-sm text-primary mb-1 text-content">
@@ -168,33 +189,52 @@ export default {
               </span>
               • By <span class="font-medium">{{ blog.data.author }}</span>
             </p>
-            <p class="text-gray-600 mt-3 text-content">
+            <p class="text-gray-500 mt-3 text-lg text-content line-clamp-3">
               {{ blog.data.description }}
             </p>
           </div>
+          <div class="ring-1 text-[1rem] w-fit px-4 py-1">
+            <button type="button">Read</button>
+          </div>
+        </div>
+
+        <div class="w-1/2">
+          <img
+            :src="blog.data.heroImage"
+            :alt="blog.data.title"
+            class="w-fit h-[25rem] aspect-video object-cover rounded-md"
+            draggable="false"
+          />
         </div>
       </div>
 
       <!-- Indicators -->
-      <div class="flex justify-start mt-4 absolute bottom-4 left-0 ml-4">
-        <button
-          v-for="(_, index) in featuredBlogs"
-          :key="index"
-          :class="[
-            'indicator w-3 h-3 mx-1 rounded-full',
-            state.currentIndex === index ? 'bg-gray-800' : 'bg-gray-400',
-          ]"
-          @click="goToSlide(index)"
-        ></button>
-      </div>
     </div>
-  </div>
+    <div class="absolute flex justify-start my-4 bottom-0">
+      <button
+        v-for="(_, index) in featuredBlogs"
+        :key="index"
+        :class="[
+          'indicator w-3 h-3 mx-1 rounded-full',
+          state.currentIndex === index
+            ? 'bg-[color:var(--accent)]'
+            : 'bg-gray-400',
+        ]"
+        @click="goToSlide(index)"
+      ></button>
+    </div>
+  </section>
 </template>
 
 <style>
+.test {
+  @apply ring-1 ring-red-600;
+}
+
 .carousel {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
   pointer-events: auto;
 }
 .carousel::-webkit-scrollbar {
