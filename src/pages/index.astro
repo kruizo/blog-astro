@@ -6,10 +6,13 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '@/components/FormattedDate.astro';
 import Hero from '@/components/Hero.vue';
-import SidePanel from '@/components/SidePanel.astro';
+import SidePanel from '@/components/SidePanel.vue';
+import Content from '@/components/Content.vue';
+import MainContent from '@/components/MainContent.vue';
+import Main from '@/components/Main.vue';
+import '../styles/styles.css';
 
 const blogs = (await getCollection('blog'));
-
 
 ---
 
@@ -20,17 +23,16 @@ const blogs = (await getCollection('blog'));
   </head>
   <body>
     <Header />
-    <main>
-      <div class="flex w-full gap-4">
-        <div class="">
-          <section>
-            <Hero blogs={blogs} client:load />
-          </section>
-          <section>
-          </section>
-        </div>
-        <SidePanel />
-      </div>
-    </main>
+     <main>
+        <Hero blogs={blogs} client:load />
+        <section>
+          <div class="w-full flex">
+            <Content />
+            <SidePanel blogs={blogs}/>
+          </div>
+        <section/>
+     </main>
   </body>
 </html>
+
+<script src="../utils/main.js"></script>
