@@ -1,5 +1,7 @@
 # Blog Astro Project
 
+![blog](public/image.png)
+
 Welcome to the Blog Astro Project! This project is built using [Astro](https://astro.build/), a modern static site generator, and integrates with Vue.js for dynamic components. The project is styled using Tailwind CSS and includes a variety of features to create a dynamic and engaging blog.
 
 ## Features
@@ -10,10 +12,6 @@ Welcome to the Blog Astro Project! This project is built using [Astro](https://a
 - **Markdown Support**: Write your blog posts in Markdown for simplicity and readability.
 - **SEO Optimized**: Built-in SEO features to help your blog rank better in search engines.
 - **Responsive Design**: Fully responsive design to ensure your blog looks great on all devices.
-
-## Project Structure
-
-. ├── .astro/ │ ├── collections/ │ │ └── blog.schema.json │ ├── content-assets.mjs │ ├── content-modules.mjs │ ├── content.d.ts │ ├── data-store.json │ ├── settings.json │ └── types.d.ts ├── .gitignore ├── .vscode/ │ ├── extensions.json │ └── launch.json ├── astro.config.mjs ├── package.json ├── public/ │ ├── fonts/ │ │ ├── atkinson-bold.woff │ │ ├── atkinson-regular.woff │ │ ├── Belanosima-Bold.ttf │ │ ├── Belanosima-Regular.ttf │ │ ├── Belanosima-SemiBold.ttf │ │ └── ... ├── README.md ├── src/ │ ├── components/ │ │ ├── BaseHead.astro │ │ ├── Header.astro │ │ ├── Footer.vue │ │ ├── FormattedDate.astro │ │ ├── Hero.vue │ │ ├── SidePanel.vue │ │ ├── Content.vue │ │ └── Main.vue │ ├── consts.ts │ ├── content/ │ │ ├── blog/ │ │ │ ├── Installing_Fedora.md │ │ │ └── Why_JavaScript_is_the_GOAT_of_Programming_2025.md │ │ └── content.config.ts │ ├── layouts/ │ ├── pages/ │ │ └── index.astro │ ├── styles/ │ │ └── styles.css │ └── utils/ ├── tailwind.config.mjs └── tsconfig.json
 
 ## Getting Started
 
@@ -27,7 +25,7 @@ Welcome to the Blog Astro Project! This project is built using [Astro](https://a
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/your-username/blog-astro.git
+   git clone https://github.com/kruizo/blog-astro.git
    cd blog-astro
    ```
 
@@ -51,8 +49,8 @@ Welcome to the Blog Astro Project! This project is built using [Astro](https://a
 
 ## Usage
 
-- **Writing Blog Posts**: Add your Markdown files to the [`src/content/blog/`](command:\_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fd%3A%2Fworkspace%2FVSCODE%2Fblog-astro%2Fsrc%2Fcontent%2Fblog%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "d:\workspace\VSCODE\blog-astro\src\content\blog\") directory. Each file should include frontmatter for metadata.
-- **Adding Components**: Create new components in the [`src/components/`](command:\_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fd%3A%2Fworkspace%2FVSCODE%2Fblog-astro%2Fsrc%2Fcomponents%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "d:\workspace\VSCODE\blog-astro\src\components\") directory and import them into your pages as needed.
+- **Writing Blog Posts**: Add your Markdown files to the [`src/content/blog/`] directory. Each file should include frontmatter for metadata.
+- **Adding Components**: Create new components in the [`src/components/`] directory and import them into your pages as needed.
 - **Styling**: Use Tailwind CSS classes in your components and pages for styling.
 
 ## Deployment
@@ -63,6 +61,7 @@ To build your project for production, run:
 npm run build
 # or
 yarn build
+```
 
 This will generate static files in the dist/ directory, which you can deploy to your preferred hosting service.
 
@@ -77,5 +76,3 @@ Astro
 Vue.js
 Tailwind CSS
 Happy coding!
-
-```
