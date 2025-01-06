@@ -1,10 +1,10 @@
-# Blog Astro Project
+# blog-astro-vue </>
 
 ![blog](public/image.png)
 
 Welcome to the Blog Astro Project! This project is built using [Astro](https://astro.build/), a modern static site generator, and integrates with Vue.js for dynamic components. The project is styled using Tailwind CSS and includes a variety of features to create a dynamic and engaging blog.
 
-## Features
+## Features ✨
 
 - **Astro Framework**: Leverage the power of Astro for fast and optimized static site generation.
 - **Vue.js Integration**: Use Vue.js components for dynamic and interactive content.
@@ -13,7 +13,7 @@ Welcome to the Blog Astro Project! This project is built using [Astro](https://a
 - **SEO Optimized**: Built-in SEO features to help your blog rank better in search engines.
 - **Responsive Design**: Fully responsive design to ensure your blog looks great on all devices.
 
-## Getting Started
+## Getting Started 🚀
 
 ### Prerequisites
 
