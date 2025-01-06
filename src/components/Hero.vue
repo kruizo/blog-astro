@@ -34,13 +34,11 @@ export default {
 
     const carouselInterval = ref(null);
     const startCarousel = () => {
-      stopCarousel(); // Clear any previous interval before starting a new one
+      stopCarousel();
       carouselInterval.value = setInterval(() => {
         if (state.isDown) {
-          console.log("Carousel paused (isDown=true)");
-          return; // Skip sliding while the user is interacting
+          return;
         }
-        console.log("Sliding to next...");
         const nextIndex = (state.currentIndex + 1) % featuredBlogs.length;
         goToSlide(nextIndex);
       }, 3000);

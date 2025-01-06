@@ -1,11 +1,9 @@
 const captures = document.querySelectorAll(".glow-capture");
 
 captures.forEach((capture) => {
-  // Clone a child element. For example, we can clone the first child.
   const clonedChild = capture.children[0].cloneNode(true);
   const overlay = capture.querySelector(".glow-overlay");
 
-  // Append the cloned child to the overlay.
   overlay.appendChild(clonedChild);
 
   capture.addEventListener("mousemove", (event) => {
@@ -17,9 +15,7 @@ captures.forEach((capture) => {
     overlay.style.setProperty("--glow-opacity", "1");
   });
 
-  // Add mouseleave event to remove the glow effect
   capture.addEventListener("mouseleave", () => {
     overlay.style.setProperty("--glow-opacity", "0");
   });
-  console.log("Hello from Astro!");
 });
