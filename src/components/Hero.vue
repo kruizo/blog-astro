@@ -147,7 +147,7 @@ export default {
 
     onMounted(() => {
       const observer = observeCarouselItems();
-      const carousel = startCarousel();
+      // const carousel = startCarousel();
       carousel.value.addEventListener("scroll", handleScroll);
 
       onUnmounted(() => {
@@ -199,7 +199,7 @@ export default {
         :id="'carousel-item-' + index"
         class="carousel-item min-w-full flex-grow shadow-md rounded-md flex"
       >
-        <div class="m-2 w-1/2">
+        <div class="m-2 w-1/2 space-y-5">
           <div class="h-3/4">
             <h3 class="text-[6vh] font-semibold text-primary mb-2 text-content">
               {{ blog.data.title }}
@@ -214,8 +214,13 @@ export default {
               {{ blog.data.description }}
             </p>
           </div>
-          <div class="ring-1 text-[1rem] w-fit px-4 py-1">
-            <button type="button">Read</button>
+          <div>
+            <a
+              class="ring-1 w-fit text-[1rem] px-4 py-1"
+              :href="`blog/${blog.id}`"
+            >
+              Read
+            </a>
           </div>
         </div>
 

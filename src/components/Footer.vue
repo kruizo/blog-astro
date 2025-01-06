@@ -2,7 +2,7 @@
   <footer>
     &copy; {{ currentYear }} kruizo. All rights reserved.
     <div class="social-links">
-      <a href="https://twitter.com/astrodotbuild" target="_blank">
+      <a href="https://fb.com/kynethruizo" target="_blank">
         <span class="sr-only">Follow Astro on Twitter</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
